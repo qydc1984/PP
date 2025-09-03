@@ -1,0 +1,22 @@
+<!-- CombinedHv.vcxproj -->
+<Project>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>
+        <!-- 根据目标平台定义 -->
+        %(PreprocessorDefinitions)
+      </PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  
+  <ItemGroup>
+    <!-- Intel VT-x源文件 -->
+    <ClCompile Include="airhv\Source\*.cpp" Condition="'$(CpuArchitecture)'=='Intel'" />
+    
+    <!-- AMD-V源文件 -->
+    <ClCompile Include="memhv-driver\*.cpp" Condition="'$(CpuArchitecture)'=='AMD'" />
+    
+    <!-- 通用源文件 -->
+    <ClCompile Include="common\*.cpp" />
+  </ItemGroup>
+</Project>
