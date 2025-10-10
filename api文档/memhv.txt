@@ -1,0 +1,276 @@
+memhv API 中文文档
+================
+
+版本: 1.0
+日期: 2024
+
+目录
+====
+1. 简介
+2. 核心函数
+3. 内存操作函数
+4. 进程管理函数
+5. 高级功能函数
+6. 工具函数
+7. 常量和定义
+8. 错误代码
+9. 使用示例
+
+1. 简介
+========
+
+memhv 是一个基于 hypervisor 的内存操作工具包，使用 AMD SVM (安全虚拟机)
+技术提供对目标进程内存的安全高效访问。本文档详细描述了所有可用的函数
+及其使用方法。
+
+适配器提供了 C 和 C++ 接口，便于集成到各种项目中。所有操作都通过与
+hypervisor 的安全 VMCALL 通信来执行。
+
+2. 核心函数
+===========
+
+BOOLEAN MemHvIsPresent(VOID)
+---------------------------
+描述: 检查 memhv hypervisor 是否存在并正在运行
+返回值: 如果 hypervisor 处于活动状态返回 TRUE，否则返回 FALSE
+用法: 使用此函数验证 hypervisor 是否可用
+示例: if (MemHvIsPresent()) { /* hypervisor 可用 */ }
+
+PEPROCESS MemHvGetProcessById(HANDLE ProcessId)
+----------------------------------------------
+描述: 根据进程 ID 获取进程对象指针
+参数: ProcessId - 目标进程的 ID
+返回值: PEPROCESS 进程对象指针，失败时返回 NULL
+注意: 返回的进程对象需要适当引用计数管理
+
+ULONG64 MemHvGetProcessDirectoryBase(PEPROCESS Process)
+-----------------------------------------------------
+描述: 获取指定进程的页目录基址 (CR3)
+参数: Process - 进程对象指针
+返回值: 64位页目录基址，失败时返回 0
+
+3. 内存操作函数
+===============
+
+NTSTATUS MemHvCopyProcessMemory(PCOPY_MEMORY_DATA CopyData)
+---------------------------------------------------------
+描述: 在进程间复制内存数据
+参数: CopyData - 内存复制控制块指针
+返回值: NTSTATUS 操作状态
+注意: 单次操作最大支持 64KB 数据
+
+NTSTATUS MemHvReadProcessMemory(ULONG64 ProcessDirectoryBase, 
+                               ULONG64 Address, 
+                               PVOID Buffer, 
+                               SIZE_T Size)
+----------------------------------------------------------
+描述: 读取指定进程的内存
+参数: ProcessDirectoryBase - 进程页目录基址
+      Address - 要读取的内存地址
+      Buffer - 读取数据缓冲区
+      Size - 读取数据大小
+返回值: NTSTATUS 操作状态
+
+NTSTATUS MemHvWriteProcessMemory(ULONG64 ProcessDirectoryBase, 
+                                ULONG64 Address, 
+                                PVOID Buffer, 
+                                SIZE_T Size)
+-----------------------------------------------------------
+描述: 写入指定进程的内存
+参数: ProcessDirectoryBase - 进程页目录基址
+      Address - 要写入的内存地址
+      Buffer - 写入数据缓冲区
+      Size - 写入数据大小
+返回值: NTSTATUS 操作状态
+
+4. 进程管理函数
+===============
+
+PEPROCESS MemHvGetNextProcess(PEPROCESS Process)
+-----------------------------------------------
+描述: 获取进程链表中的下一个进程对象
+参数: Process - 当前进程对象
+返回值: 下一个进程对象指针
+
+BOOLEAN MemHvIsProcessValid(PEPROCESS Process)
+--------------------------------------------
+描述: 验证进程对象是否有效
+参数: Process - 要验证的进程对象
+返回值: TRUE 如果进程有效，否则 FALSE
+
+ULONG64 MemHvGetProcessId(PEPROCESS Process)
+------------------------------------------
+描述: 获取进程的 ID
+参数: Process - 进程对象
+返回值: 进程 ID，失败时返回 0
+
+5. 高级功能函数
+===============
+
+NTSTATUS MemHvEnableProtection(VOID)
+-------------------------------
+描述: 启用 hypervisor 自我保护机制
+返回值: NTSTATUS 操作状态
+注意: 启用后 hypervisor 将隐藏自身内存
+
+BOOLEAN MemHvIsValidMsr(UINT32 Msr)
+---------------------------------
+描述: 验证 MSR 寄存器索引是否有效
+参数: Msr - MSR 寄存器索引
+返回值: TRUE 如果有效，否则 FALSE
+
+BOOLEAN MemHvIsValidUserAddress(ULONG64 Address)
+-----------------------------------------------
+描述: 验证用户态地址是否有效
+参数: Address - 要验证的地址
+返回值: TRUE 如果地址有效，否则 FALSE
+
+6. 工具函数
+===========
+
+VOID MemHvReferenceObject(PVOID Object)
+-------------------------------------
+描述: 增加对象引用计数
+参数: Object - 对象指针
+
+VOID MemHvDereferenceObject(PVOID Object)
+---------------------------------------
+描述: 减少对象引用计数
+参数: Object - 对象指针
+
+NTSTATUS MemHvReadProcessMemorySafe(ULONG64 ProcessDirectoryBase,
+                                   ULONG64 Address,
+                                   PVOID Buffer,
+                                   SIZE_T Size,
+                                   PSIZE_T BytesRead)
+-----------------------------------------------------
+描述: 安全读取进程内存（带异常处理）
+参数: ProcessDirectoryBase - 进程页目录基址
+      Address - 要读取的内存地址
+      Buffer - 读取数据缓冲区
+      Size - 读取数据大小
+      BytesRead - 实际读取字节数（可选）
+返回值: NTSTATUS 操作状态
+
+NTSTATUS MemHvWriteProcessMemorySafe(ULONG64 ProcessDirectoryBase,
+                                    ULONG64 Address,
+                                    PVOID Buffer,
+                                    SIZE_T Size,
+                                    PSIZE_T BytesWritten)
+------------------------------------------------------
+描述: 安全写入进程内存（带异常处理）
+参数: ProcessDirectoryBase - 进程页目录基址
+      Address - 要写入的内存地址
+      Buffer - 写入数据缓冲区
+      Size - 写入数据大小
+      BytesWritten - 实际写入字节数（可选）
+返回值: NTSTATUS 操作状态
+
+7. 常量和定义
+=============
+
+#define MEMHV_MAX_RW_SIZE           0x10000     // 最大单次读写大小(64KB)
+#define MEMHV_MAGIC_VALUE           0xfeed3     // VMCALL魔法值
+#define MEMHV_COMM_CHECK_VALUE      0xdead      // 通信检查值
+
+typedef struct _COPY_MEMORY_DATA
+{
+    ULONG64 SourceDirectoryBase;      // 源进程页目录基址
+    ULONG64 SourceAddress;            // 源地址
+    ULONG64 DestinationDirectoryBase; // 目标进程页目录基址
+    ULONG64 DestinationAddress;       // 目标地址
+    SIZE_T NumberOfBytes;             // 拷贝字节数
+} COPY_MEMORY_DATA, *PCOPY_MEMORY_DATA;
+
+8. 错误代码
+===========
+
+STATUS_SUCCESS (0x00000000)
+  操作成功完成
+
+STATUS_INVALID_PARAMETER (0xC000000D)
+  提供了无效的参数
+
+STATUS_BUFFER_OVERFLOW (0x80000005)
+  请求的数据大小超过最大限制
+
+STATUS_ACCESS_VIOLATION (0xC0000005)
+  内存访问冲突
+
+STATUS_UNSUCCESSFUL (0xC0000001)
+  操作未成功完成
+
+9. 使用示例
+===========
+
+示例 1: 检查 hypervisor 并读取进程内存
+-----------------------------------
+#include "memhv_adapter.h"
+
+if (MemHvIsPresent()) 
+{
+    PEPROCESS targetProcess = MemHvGetProcessById((HANDLE)1234);
+    if (targetProcess) 
+    {
+        ULONG64 dirBase = MemHvGetProcessDirectoryBase(targetProcess);
+        if (dirBase) 
+        {
+            int value;
+            NTSTATUS status = MemHvReadProcessMemory(dirBase, 0x12345678, &value, sizeof(value));
+            if (NT_SUCCESS(status)) 
+            {
+                // 成功读取内存
+                printf("读取的值: %d\n", value);
+            }
+        }
+    }
+}
+
+示例 2: 使用 C++ 封装类
+---------------------
+#include "memhv_adapter.h"
+
+if (MemHvCpp::IsPresent()) 
+{
+    auto process = MemHvCpp::GetProcessById((HANDLE)1234);
+    if (process) 
+    {
+        auto dirBase = MemHvCpp::GetProcessDirectoryBase(process);
+        if (dirBase) 
+        {
+            int value;
+            auto status = MemHvCpp::ReadProcessMemory(dirBase, 0x12345678, value);
+            if (NT_SUCCESS(status)) 
+            {
+                std::cout << "读取的值: " << value << std::endl;
+            }
+        }
+    }
+}
+
+示例 3: 批量内存操作
+------------------
+COPY_MEMORY_DATA copyData = {0};
+copyData.SourceDirectoryBase = sourceDirBase;
+copyData.SourceAddress = 0x1000;
+copyData.DestinationDirectoryBase = targetDirBase;
+copyData.DestinationAddress = 0x2000;
+copyData.NumberOfBytes = 1024;
+
+NTSTATUS status = MemHvCopyProcessMemory(&copyData);
+if (NT_SUCCESS(status)) 
+{
+    // 内存复制成功
+}
+
+注意事项
+========
+1. 所有内存操作都应在适当的权限检查后进行
+2. 大于 64KB 的内存操作会被自动分块处理
+3. 使用完 PEPROCESS 对象后应适当管理引用计数
+4. 启用保护功能后，hypervisor 会隐藏自身不被检测
+5. 所有操作都通过 VMCALL 与 hypervisor 通信，确保安全性
+
+版本历史
+========
+1.0 (2024) - 初始版本，包含完整的 API 接口

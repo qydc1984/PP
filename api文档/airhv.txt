@@ -1,0 +1,391 @@
+AirHV Adapter API 中文文档
+========================
+
+版本: 1.0
+日期: 2024
+
+目录
+====
+1. 概述
+2. 头文件
+3. 初始化和管理函数
+4. VMCALL 函数
+5. 内存操作函数
+6. 寄存器操作函数
+7. 中断处理函数
+8. 拦截控制函数
+9. 数据结构
+10. 使用示例
+
+1. 概述
+========
+
+AirHV Adapter 是一个用于与 AirHV hypervisor 交互的接口层，提供了管理 
+hypervisor、操作客户机内存和寄存器、以及处理虚拟化相关功能的 API。
+该适配器封装了底层的 VT-x 操作，为开发者提供了简洁易用的接口。
+
+2. 头文件
+=========
+
+#include "airhv_adapter.h"
+
+3. 初始化和管理函数
+===================
+
+bool airhv_adapter_init()
+------------------------
+描述: 初始化并启动 AirHV hypervisor
+返回值: 
+  • true - 初始化成功
+  • false - 初始化失败
+说明: 分配并初始化所有必要的 hypervisor 结构，包括 VCPU、VMCS、EPT 等
+用法: 应用程序启动时调用一次
+
+void airhv_adapter_cleanup()
+---------------------------
+描述: 关闭并清理 AirHV hypervisor
+说明: 释放所有分配的资源，包括 VCPU 结构、内存页、位图等
+用法: 应用程序退出时调用
+
+bool airhv_adapter_is_running()
+------------------------------
+描述: 检查 hypervisor 是否正在运行
+返回值:
+  • true - hypervisor 正在运行
+  • false - hypervisor 未运行或未初始化
+
+unsigned int airhv_adapter_get_processor_count()
+-----------------------------------------------
+描述: 获取系统中逻辑处理器的数量
+返回值: 逻辑处理器的数量
+
+4. VMCALL 函数
+==============
+
+unsigned __int64 airhv_adapter_vmcall(
+    unsigned int processor_index,
+    unsigned __int64 hypercall_number,
+    void* context
+)
+-----------------------------------------------
+描述: 在指定的处理器上执行 VMCALL 指令与 hypervisor 通信
+参数:
+  • processor_index - 处理器索引
+  • hypercall_number - hypercall 编号
+  • context - 上下文参数指针
+返回值: VMCALL 执行结果
+
+5. 内存操作函数
+===============
+
+bool airhv_adapter_hook_page(
+    unsigned __int64 physical_address,
+    void (*hook_handler)(__vcpu* vcpu)
+)
+------------------------------------
+描述: 在指定物理地址设置 EPT 钩子
+参数:
+  • physical_address - 要钩取的物理地址
+  • hook_handler - 钩子处理函数
+返回值:
+  • true - 钩子设置成功
+  • false - 钩子设置失败
+
+bool airhv_adapter_unhook_page(unsigned __int64 physical_address)
+---------------------------------------------------------------
+描述: 移除指定物理地址的 EPT 钩子
+参数:
+  • physical_address - 要移除钩子的物理地址
+返回值:
+  • true - 钩子移除成功
+  • false - 钩子移除失败
+
+unsigned long airhv_adapter_read_guest_memory(
+    unsigned __int64 physical_address,
+    void* buffer,
+    unsigned long size
+)
+-----------------------------------------------
+描述: 读取客户机物理内存
+参数:
+  • physical_address - 物理地址
+  • buffer - 读取数据的缓冲区
+  • size - 要读取的字节数
+返回值: 实际读取的字节数
+
+unsigned long airhv_adapter_write_guest_memory(
+    unsigned __int64 physical_address,
+    const void* buffer,
+    unsigned long size
+)
+------------------------------------------------
+描述: 写入客户机物理内存
+参数:
+  • physical_address - 物理地址
+  • buffer - 要写入数据的缓冲区
+  • size - 要写入的字节数
+返回值: 实际写入的字节数
+
+6. 寄存器操作函数
+=================
+
+bool airhv_adapter_get_guest_registers(
+    unsigned int processor_index,
+    __vmexit_guest_registers* registers
+)
+--------------------------------------
+描述: 获取指定处理器的客户机寄存器状态
+参数:
+  • processor_index - 处理器索引
+  • registers - 寄存器结构指针
+返回值:
+  • true - 获取成功
+  • false - 获取失败
+
+bool airhv_adapter_set_guest_registers(
+    unsigned int processor_index,
+    const __vmexit_guest_registers* registers
+)
+--------------------------------------------
+描述: 设置指定处理器的客户机寄存器状态
+参数:
+  • processor_index - 处理器索引
+  • registers - 寄存器结构指针
+返回值:
+  • true - 设置成功
+  • false - 设置失败
+
+7. 中断处理函数
+===============
+
+bool airhv_adapter_inject_interrupt(
+    unsigned int processor_index,
+    unsigned char vector,
+    unsigned int interruption_type,
+    unsigned int error_code,
+    bool error_code_valid
+)
+-----------------------------------
+描述: 向客户机注入中断
+参数:
+  • processor_index - 处理器索引
+  • vector - 中断向量
+  • interruption_type - 中断类型
+  • error_code - 错误码
+  • error_code_valid - 错误码是否有效
+返回值:
+  • true - 注入成功
+  • false - 注入失败
+
+8. 拦截控制函数
+===============
+
+bool airhv_adapter_set_msr_intercept(
+    unsigned __int32 msr_index,
+    bool read_intercept,
+    bool write_intercept
+)
+------------------------------------
+描述: 设置 MSR 访问拦截
+参数:
+  • msr_index - MSR 索引
+  • read_intercept - 读取拦截标志
+  • write_intercept - 写入拦截标志
+返回值:
+  • true - 设置成功
+  • false - 设置失败
+
+bool airhv_adapter_set_io_intercept(
+    unsigned __int16 port_number,
+    bool intercept
+)
+----------------------------------
+描述: 设置 I/O 端口拦截
+参数:
+  • port_number - 端口号
+  • intercept - 拦截标志
+返回值:
+  • true - 设置成功
+  • false - 设置失败
+
+9. 数据结构
+===========
+
+__vmexit_guest_registers
+-----------------------
+客户机寄存器结构：
+
+struct __vmexit_guest_registers
+{
+    unsigned __int64 rax;    // 累加器寄存器
+    unsigned __int64 rbx;    // 基址寄存器
+    unsigned __int64 rcx;    // 计数寄存器
+    unsigned __int64 rdx;    // 数据寄存器
+    unsigned __int64 rsi;    // 源变址寄存器
+    unsigned __int64 rdi;    // 目的变址寄存器
+    unsigned __int64 r8;     // 通用寄存器 R8
+    unsigned __int64 r9;     // 通用寄存器 R9
+    unsigned __int64 r10;    // 通用寄存器 R10
+    unsigned __int64 r11;    // 通用寄存器 R11
+    unsigned __int64 r12;    // 通用寄存器 R12
+    unsigned __int64 r13;    // 通用寄存器 R13
+    unsigned __int64 r14;    // 通用寄存器 R14
+    unsigned __int64 r15;    // 通用寄存器 R15
+    unsigned __int64 rsp;    // 栈指针寄存器
+    unsigned __int64 rbp;    // 基址指针寄存器
+    unsigned __int64 rip;    // 指令指针寄存器
+};
+
+__vcpu
+------
+VCPU 结构（用于钩子处理函数）：
+struct __vcpu
+{
+    // VCPU 相关信息和状态
+    // 具体字段由 hypervisor 实现定义
+};
+
+10. 使用示例
+============
+
+示例 1: 初始化和基本使用
+---------------------
+#include "airhv_adapter.h"
+
+int main()
+{
+    // 初始化 hypervisor
+    if (!airhv_adapter_init()) 
+    {
+        printf("Failed to initialize AirHV\n");
+        return -1;
+    }
+    
+    // 检查是否运行
+    if (airhv_adapter_is_running()) 
+    {
+        printf("AirHV is running on %u processors\n", 
+               airhv_adapter_get_processor_count());
+    }
+    
+    // ... 执行其他操作 ...
+    
+    // 清理资源
+    airhv_adapter_cleanup();
+    return 0;
+}
+
+示例 2: 内存读写操作
+------------------
+unsigned char buffer[256];
+unsigned long bytesRead;
+
+// 读取客户机物理内存
+bytesRead = airhv_adapter_read_guest_memory(0x100000, buffer, sizeof(buffer));
+if (bytesRead > 0) 
+{
+    printf("Read %lu bytes from physical address 0x100000\n", bytesRead);
+}
+
+// 写入客户机物理内存
+const char* data = "Hello, AirHV!";
+unsigned long bytesWritten = airhv_adapter_write_guest_memory(
+    0x200000, data, strlen(data) + 1);
+if (bytesWritten > 0) 
+{
+    printf("Wrote %lu bytes to physical address 0x200000\n", bytesWritten);
+}
+
+示例 3: 寄存器操作
+---------------
+__vmexit_guest_registers regs;
+unsigned int processor_index = 0;
+
+// 获取寄存器状态
+if (airhv_adapter_get_guest_registers(processor_index, &regs)) 
+{
+    printf("RIP: 0x%llx, RSP: 0x%llx\n", regs.rip, regs.rsp);
+    
+    // 修改 RIP 并设置回去
+    regs.rip += 0x10;
+    if (airhv_adapter_set_guest_registers(processor_index, &regs)) 
+    {
+        printf("Registers updated successfully\n");
+    }
+}
+
+示例 4: 设置内存钩子
+-----------------
+void my_hook_handler(__vcpu* vcpu)
+{
+    // 钩子处理逻辑
+    printf("Memory access intercepted!\n");
+    // 可以在这里修改寄存器、注入中断等
+}
+
+// 在物理地址 0x100000 设置钩子
+if (airhv_adapter_hook_page(0x100000, my_hook_handler)) 
+{
+    printf("Hook set successfully\n");
+    
+    // 使用完毕后移除钩子
+    airhv_adapter_unhook_page(0x100000);
+}
+
+示例 5: VMCALL 通信
+----------------
+// 定义 hypercall 编号
+#define HYPERCALL_TEST 0x1000
+
+struct test_context 
+{
+    unsigned __int64 param1;
+    unsigned __int64 param2;
+};
+
+struct test_context ctx = {0x1234, 0x5678};
+unsigned __int64 result = airhv_adapter_vmcall(0, HYPERCALL_TEST, &ctx);
+printf("VMCALL result: 0x%llx\n", result);
+
+示例 6: 拦截控制
+-------------
+// 拦截 MSR 读写
+if (airhv_adapter_set_msr_intercept(0xC0000080, true, true)) 
+{ // EFER MSR
+    printf("EFER MSR intercept enabled\n");
+}
+
+// 拦截 I/O 端口
+if (airhv_adapter_set_io_intercept(0x3F8, true)) 
+{ // COM1 端口
+    printf("COM1 port intercept enabled\n");
+}
+
+示例 7: 中断注入
+-------------
+// 注入一个通用保护异常 (#GP)
+if (airhv_adapter_inject_interrupt(0, 13, 3, 0, false)) 
+{
+    printf("General Protection Fault injected\n");
+}
+
+注意事项
+========
+1. 必须先调用 airhv_adapter_init() 初始化 hypervisor
+2. 所有操作应在 hypervisor 运行状态下执行
+3. 使用完毕后应调用 airhv_adapter_cleanup() 释放资源
+4. 内存钩子处理函数应在中断上下文中快速执行
+5. VMCALL 调用需要与 hypervisor 端的处理函数匹配
+6. 多处理器系统中注意处理器索引的正确使用
+7. 拦截功能会影响系统性能，应谨慎使用
+
+错误处理
+========
+所有函数都应检查返回值以确保操作成功：
+- 布尔值函数：false 表示失败
+- 整数值函数：0 或负值通常表示失败
+- 指针函数：NULL 表示失败
+
+版本历史
+========
+1.0 (2024) - 初始版本，包含完整的 API 接口

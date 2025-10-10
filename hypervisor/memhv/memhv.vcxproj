@@ -86,6 +86,10 @@
     <DriverSign>
       <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
     </DriverSign>
+    <ClCompile>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories />
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <DriverSign>
@@ -124,6 +128,7 @@
     <ClCompile Include="Source\SVM\Handlers\SVM_VMExit.cpp" />
     <ClCompile Include="Source\SVM\SVM.cpp" />
     <ClCompile Include="Source\Utils.cpp" />
+    <ClCompile Include="Source\memhv_adapter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Global.h" />
@@ -136,6 +141,7 @@
     <ClInclude Include="Source\SVM\Handlers\SVM_VMExit.h" />
     <ClInclude Include="Source\SVM\SVM.h" />
     <ClInclude Include="Source\Utils.h" />
+    <ClInclude Include="Source\memhv_adapter.h" />
   </ItemGroup>
   <ItemGroup>
     <MASM Include="Source\SVM\SVM_x64.asm" />

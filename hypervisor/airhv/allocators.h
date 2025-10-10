@@ -11,7 +11,7 @@
 template <typename T>
 inline T allocate_pool(unsigned __int64 size)
 {
-    return (T)ExAllocatePoolWithTag(NonPagedPool, size, VMM_TAG);
+    return (T)ExAllocatePool2(NonPagedPool, size, VMM_TAG);
 }
 
 /// <summary>
@@ -23,7 +23,7 @@ inline T allocate_pool(unsigned __int64 size)
 template <typename T>
 inline T* allocate_pool()
 {
-    return (T*)ExAllocatePoolWithTag(NonPagedPool, sizeof(T), VMM_TAG);
+    return (T*)ExAllocatePool2(NonPagedPool, sizeof(T), VMM_TAG);
 }
 
 /// <summary>

@@ -9,154 +9,149 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-    <Filter Include="Driver Files">
-      <UniqueIdentifier>{8E41214B-6785-4CFE-B992-037D68949A14}</UniqueIdentifier>
-      <Extensions>inf;inv;inx;mof;mc;</Extensions>
+    <Filter Include="ia32">
+      <UniqueIdentifier>{5ebf2f56-8a70-44fa-9d93-25d2624140cf}</UniqueIdentifier>
     </Filter>
     <Filter Include="asm">
-      <UniqueIdentifier>{73422af8-864e-442f-a192-be64adb0a0fc}</UniqueIdentifier>
+      <UniqueIdentifier>{094e23f7-a1bb-4434-9336-5d33a1f4cfc9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lde">
-      <UniqueIdentifier>{136f69bf-5e7e-4a02-ab6a-1aef8e5a1207}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ia32">
-      <UniqueIdentifier>{797b5b3d-b662-46aa-91a2-ba6aa5ce53d3}</UniqueIdentifier>
+    <Filter Include="ide">
+      <UniqueIdentifier>{bfc0148d-faa0-4117-87a6-32c9d4ff277b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ept.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmcs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="poolmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="spinlock.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="hypervisor_routines.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmcall_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmexit_handler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="hypervisor_gateway.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="invalidators.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="poolmanager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ntapi.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hypervisor_routines.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hypervisor_gateway.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ia32\cpuid.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\cpuid.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\cr.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\cr.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\dr.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\dr.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\ept.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\ept.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\msr.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\exception.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\mtrr.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\msr.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\rflags.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\mtrr.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\vmcs.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\rflags.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="ia32\vmcs_encodings.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\segment.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="common.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="log.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ia32\segment.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\vmcs.h">
       <Filter>ia32</Filter>
     </ClInclude>
-    <ClInclude Include="asm\vm_context.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ia32\vmcs_encodings.h">
+      <Filter>ia32</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PP\hypervisor\airhv\asm\vm_context.h">
       <Filter>asm</Filter>
     </ClInclude>
-    <ClInclude Include="asm\vm_intrin.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\asm\vm_intrin.h">
       <Filter>asm</Filter>
     </ClInclude>
-    <ClInclude Include="vmcall_handler.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\xsave.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmcall_reason.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\allocators.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmexit_handler.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="interrupt.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\hypervisor_gateway.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="allocators.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\hypervisor_routines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="invalidators.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\interrupt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmm.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\invalidators.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="xsave.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\log.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="spinlock.h">
+    <ClInclude Include="..\..\PP\hypervisor\airhv\ntapi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PP\hypervisor\airhv\poolmanager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PP\hypervisor\airhv\spinlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PP\hypervisor\airhv\vmcall_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PP\hypervisor\airhv\vmcall_reason.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PP\hypervisor\airhv\vmexit_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\PP\hypervisor\airhv\vmm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="lde\lde64.asm">
-      <Filter>lde</Filter>
-    </MASM>
-    <MASM Include="asm\vm_context.asm">
+    <ClCompile Include="..\..\PP\hypervisor\airhv\vmcall_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\vmcs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\vmexit_handler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\vmm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\ept.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\hypervisor_gateway.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\hypervisor_routines.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\invalidators.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\log.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\poolmanager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\PP\hypervisor\airhv\spinlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="..\..\PP\hypervisor\airhv\asm\vm_context.asm">
       <Filter>asm</Filter>
     </MASM>
-    <MASM Include="asm\vm_intrin.asm">
+    <MASM Include="..\..\PP\hypervisor\airhv\asm\vm_intrin.asm">
       <Filter>asm</Filter>
+    </MASM>
+    <MASM Include="..\..\PP\hypervisor\airhv\lde\lde64.asm">
+      <Filter>ide</Filter>
     </MASM>
   </ItemGroup>
 </Project>
