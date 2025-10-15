@@ -10,6 +10,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_client", "client\test_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "airhv", "airhv\airhv.vcxproj", "{75CF8F36-7734-254B-E656-161C81DCC7B8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_driver", "test_driver\test_driver.vcxproj", "{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
@@ -54,6 +56,18 @@ Global
 		{75CF8F36-7734-254B-E656-161C81DCC7B8}.Release|x64.ActiveCfg = Release|x64
 		{75CF8F36-7734-254B-E656-161C81DCC7B8}.Release|x64.Build.0 = Release|x64
 		{75CF8F36-7734-254B-E656-161C81DCC7B8}.Release|x64.Deploy.0 = Release|x64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Debug|ARM64.Build.0 = Debug|ARM64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Debug|x64.ActiveCfg = Debug|x64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Debug|x64.Build.0 = Debug|x64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Debug|x64.Deploy.0 = Debug|x64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Release|ARM64.ActiveCfg = Release|ARM64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Release|ARM64.Build.0 = Release|ARM64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Release|ARM64.Deploy.0 = Release|ARM64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Release|x64.ActiveCfg = Release|x64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Release|x64.Build.0 = Release|x64
+		{646D2E63-5331-0E0D-DC13-D2413E7EF3BE}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

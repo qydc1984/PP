@@ -1,34 +1,58 @@
-/**
- * airhv_tester.h - airhv 驱动专用测试器
- *
- * 专门用于测试 airhv (Intel VT-x) 驱动的各项功能
- */
-
 #pragma once
 
 #include <windows.h>
 #include <string>
 #include <vector>
 
- // 包含 airhv 适配器接口
-#include "../airhv/Source/airhv_adapter.h"
-
 // 测试结果枚举
-enum TestResult {
-    TEST_PASS = 0,
-    TEST_FAIL = 1,
-    TEST_SKIP = 2
-};
+typedef enum _TestResult {
+    TEST_PASS,
+    TEST_FAIL,
+    TEST_SKIP
+} TestResult;
 
 // 测试信息结构
-struct AirhvTestInfo {
+typedef struct _AirhvTestInfo {
     std::string name;
-    std::string description;
     TestResult result;
+    std::string description;
     std::string error_message;
-};
+} AirhvTestInfo;
 
-// airhv 测试器类
+// 客户机寄存器结构体定义
+typedef struct _vmexit_guest_registers {
+    unsigned __int64 rax;
+    unsigned __int64 rbx;
+    unsigned __int64 rcx;
+    unsigned __int64 rdx;
+    unsigned __int64 rsi;
+    unsigned __int64 rdi;
+    unsigned __int64 r8;
+    unsigned __int64 r9;
+    unsigned __int64 r10;
+    unsigned __int64 r11;
+    unsigned __int64 r12;
+    unsigned __int64 r13;
+    unsigned __int64 r14;
+    unsigned __int64 r15;
+    unsigned __int64 rip;
+    unsigned __int64 rflags;
+} __vmexit_guest_registers;
+
+// airhv适配器函数声明
+extern "C" {
+    BOOLEAN airhv_adapter_is_running(void);
+    BOOLEAN airhv_adapter_init(void);
+    unsigned int airhv_adapter_get_processor_count(void);
+    BOOLEAN airhv_adapter_set_msr_intercept(unsigned int msr, BOOLEAN read_intercept, BOOLEAN write_intercept);
+    BOOLEAN airhv_adapter_set_io_intercept(unsigned short port, BOOLEAN intercept);
+    BOOLEAN airhv_adapter_inject_interrupt(unsigned char processor, unsigned char vector, unsigned char type, unsigned int error_code, BOOLEAN has_error_code);
+    BOOLEAN airhv_adapter_get_guest_registers(unsigned char processor, __vmexit_guest_registers* registers);
+    unsigned __int64 airhv_adapter_vmcall(unsigned char processor, unsigned __int64 hypercall_number, void* context);
+    void airhv_adapter_cleanup(void);
+}
+
+// 测试器类
 class AirhvTester {
 private:
     std::vector<AirhvTestInfo> test_results;
@@ -37,10 +61,14 @@ public:
     AirhvTester();
     ~AirhvTester();
 
-    // 主测试函数
-    int RunAllTests();
+    // 测试管理函数
+    void PrintTestHeader();
+    void PrintTestResult(const std::string& test_name, TestResult result, const std::string& message = "");
+    int GetFailedTestCount() const;
+    void PrintTestSummary();
+    bool IsIntelProcessor();
 
-    // 单独测试函数
+    // 各项测试函数
     TestResult TestDriverPresence();
     TestResult TestInitialization();
     TestResult TestProcessorCount();
@@ -64,17 +92,8 @@ public:
     TestResult TestVmCallInterface();
     TestResult TestCleanup();
 
-    // 工具函数
-    void PrintTestHeader();
-    void PrintTestResult(const std::string& test_name, TestResult result, const std::string& message = "");
-    void PrintTestSummary();
-
-    // CPU 检测函数
-    bool IsIntelProcessor();
-
-    // 获取测试结果
-    const std::vector<AirhvTestInfo>& GetTestResults() const { return test_results; }
-    int GetFailedTestCount() const;
+    // 运行所有测试
+    int RunAllTests();
 };
 
 // 全局测试函数
@@ -87,73 +106,6 @@ bool TestAirhvMemoryRead();
 bool TestAirhvMemoryWrite();
 bool TestAirhvProtection();
 bool TestAirhvCleanup();
-
-// airhv 工具函数
 bool IsIntelProcessor();
 void PrintAirhvTestHeader();
 void PrintAirhvTestResult(const char* test_name, bool result);
-
-// 详细的 airhv 测试函数
-TestResult PerformDetailedAirhvTests();
-
-// 特定功能测试
-TestResult TestAirhvVmCallInterface();
-TestResult TestAirhvProcessChainTraversal();
-TestResult TestAirhvLargeMemoryOperations();
-TestResult TestAirhvConcurrentAccess();
-TestResult TestAirhvErrorHandling();
-
-// 高级功能测试
-TestResult TestAirhvMsrInterception();
-TestResult TestAirhvIoInterception();
-TestResult TestAirhvInterruptInjection();
-TestResult TestAirhvEptHooks();
-TestResult TestAirhvGuestRegisters();
-
-// 性能测试
-TestResult TestAirhvPerformance();
-double MeasureReadPerformance();
-double MeasureWritePerformance();
-
-// 兼容性测试
-TestResult TestAirhvCompatibility();
-bool CheckVmxSupport();
-bool CheckEptSupport();
-
-// 稳定性测试
-TestResult TestAirhvStability();
-bool PerformStressTest(int iteration_count);
-bool TestResourceLeaks();
-
-// 调试辅助函数
-void EnableAirhvDebugOutput();
-void DumpAirhvTestResults();
-void SaveAirhvTestReport(const char* filename);
-
-// 配置相关测试
-TestResult TestAirhvConfiguration();
-bool ValidateAirhvConfig();
-bool TestConfigPersistence();
-
-// 安全性测试
-TestResult TestAirhvSecurity();
-bool TestMemoryProtection();
-bool TestAccessControl();
-
-// 边界条件测试
-TestResult TestAirhvBoundaryConditions();
-bool TestNullPointers();
-bool TestInvalidAddresses();
-bool TestLargeOffsets();
-
-// VMCALL 测试
-TestResult TestAirhvVmCall(unsigned __int64 hypercall_number, void* context);
-
-// 处理器相关测试
-TestResult TestAirhvPerProcessorFeatures();
-bool TestCurrentProcessorFeatures();
-
-// 内存管理测试
-TestResult TestAirhvMemoryManagement();
-bool TestPageHooking();
-bool TestPageUnhooking();

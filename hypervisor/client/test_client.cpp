@@ -17,7 +17,7 @@
 
 // °üº¬ÊÊÅäÆ÷½Ó¿Ú
 #include "../memhv/Source/memhv_adapter.h"
-#include "../airhv/Source/airhv_adapter.h"
+#include "../airhv/airhv_adapter.h"
 
 enum TestTarget {
     TARGET_AUTO = 0,
